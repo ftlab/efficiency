@@ -14,11 +14,20 @@ namespace Efficiency
 
         private readonly Dictionary<TVar, List<TData>> _data = new Dictionary<TVar, List<TData>>();
 
-        public EffMatrix(int deep)
+        private readonly EffFunc<TVar, TData> _func;
+
+        public EffMatrix(int deep, EffFunc<TVar, TData> func)
         {
             if (deep < 1) throw new ArgumentException(nameof(deep));
+            if (func == null) throw new ArgumentNullException(nameof(func));
             _deep = deep;
+            _func = func;
         }
+
+
+        public void AddVar(TVar value, List<TData> data) => _data.Add(value, data);
+
+        public bool RemoveVar(TVar value) => _data.Remove(value);
 
         public void AddIndicator(EffIndicator<TData> indicator) => _indicators.Add(indicator);
 
@@ -26,9 +35,12 @@ namespace Efficiency
 
         public bool RemoveIndicator(EffIndicator<TData> indicator) => _indicators.Remove(indicator);
 
-        public TVar GetEffectiveVar(TVar[] summ)
+        public TVar GetEffectiveVar(List<TVar> summ)
         {
-            return default(TVar);
+            return _data
+                .OrderByDescending(x => _func.Get(x.Key, summ, x.Value))
+                .FirstOrDefault()
+                .Key;
         }
     }
 

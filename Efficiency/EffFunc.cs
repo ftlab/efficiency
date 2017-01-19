@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace Efficiency
 {
-    public class EffFunc<T>
+    public class EffFunc<TVar, TData>
     {
-        private Func<T, int> _calc;
-        public EffFunc(Func<T, int> calc)
+        public EffFunc()
         {
-            if (calc == null) throw new ArgumentNullException(nameof(calc));
-            _calc = calc;
         }
 
-        public int Calc(T value) => _calc(value);
+        public int Get(TVar var, List<TVar> summ, List<TData> data)
+        {
+            return 0;
+        }
     }
 }
