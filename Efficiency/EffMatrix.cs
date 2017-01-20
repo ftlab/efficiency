@@ -6,41 +6,27 @@ using System.Threading.Tasks;
 
 namespace Efficiency
 {
-    public class EffMatrix<TVar, TData>
+    public class EffMatrix<TVar, TContext>
     {
-        private readonly int _deep;
+        private readonly List<TVar> _variants = new List<TVar>();
 
-        private readonly List<EffIndicator<TData>> _indicators = new List<EffIndicator<TData>>();
+        private readonly EffFunc<TVar, TContext> _func;
 
-        private readonly Dictionary<TVar, List<TData>> _data = new Dictionary<TVar, List<TData>>();
-
-        private readonly EffFunc<TVar, TData> _func;
-
-        public EffMatrix(int deep, EffFunc<TVar, TData> func)
+        public EffMatrix(EffFunc<TVar, TContext> func)
         {
-            if (deep < 1) throw new ArgumentException(nameof(deep));
             if (func == null) throw new ArgumentNullException(nameof(func));
-            _deep = deep;
             _func = func;
         }
 
+        public void AddVar(TVar value) => _variants.Add(value);
 
-        public void AddVar(TVar value, List<TData> data) => _data.Add(value, data);
+        public bool RemoveVar(TVar value) => _variants.Remove(value);
 
-        public bool RemoveVar(TVar value) => _data.Remove(value);
-
-        public void AddIndicator(EffIndicator<TData> indicator) => _indicators.Add(indicator);
-
-        public void AddIndicator(Func<TData, int> get) => AddIndicator(new EffIndicator<TData>(get));
-
-        public bool RemoveIndicator(EffIndicator<TData> indicator) => _indicators.Remove(indicator);
-
-        public TVar GetEffectiveVar(List<TVar> summ)
+        public TVar GetEffectiveVar(TContext context)
         {
-            return _data
-                .OrderByDescending(x => _func.Get(x.Key, summ, x.Value))
-                .FirstOrDefault()
-                .Key;
+            return _variants
+                .OrderByDescending(x => _func.Calc(x, context))
+                .FirstOrDefault();
         }
     }
 

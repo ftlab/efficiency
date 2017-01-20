@@ -43,9 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EffFunc.cs" />
     <Compile Include="EffIndicator.cs" />
     <Compile Include="EffMatrix.cs" />
-    <Compile Include="EffFunc.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

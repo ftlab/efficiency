@@ -1,20 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Efficiency
 {
-    public class EffIndicator<T>
+    public class EffIndicator<TVar, TContext>
     {
-        private readonly Func<T, int> _get;
-        public EffIndicator(Func<T, int> get)
+        private Func<TVar, TContext, double> _func;
+
+        public EffIndicator(Func<TVar, TContext, double> func)
         {
-            if (get == null) throw new ArgumentNullException();
-            _get = get;
+            if (func == null) throw new ArgumentNullException(nameof(func));
+            _func = func;
         }
 
-        public int Get(T value) => _get(value);
+        public double Get(TVar var, TContext context) => _func(var, context);
     }
 }
