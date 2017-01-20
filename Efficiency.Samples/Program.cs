@@ -7,7 +7,7 @@ namespace Efficiency.Samples
         static void Main(string[] args)
         {
             var samples = new EffMatrixSamples();
-            samples.Basic();
+            samples.Builder();
 
             Console.ReadKey();
         }
