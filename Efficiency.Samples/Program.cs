@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Efficiency.Samples
 {
@@ -10,6 +6,10 @@ namespace Efficiency.Samples
     {
         static void Main(string[] args)
         {
+            var samples = new EffMatrixSamples();
+            samples.Basic();
+
+            Console.ReadKey();
         }
     }
 }
