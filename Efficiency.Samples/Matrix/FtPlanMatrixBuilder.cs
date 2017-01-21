@@ -3,7 +3,7 @@ using Efficiency.Samples.Model;
 
 namespace Efficiency.Samples.Matrix
 {
-    public class FtPlanBuilder : EffMatrixBuilder<Employee, FtPlanContext>
+    public class FtPlanMatrixBuilder : EffMatrixBuilder<Employee, FtPlanContext>
     {
     }
 }

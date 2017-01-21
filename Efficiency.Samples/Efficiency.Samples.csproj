@@ -55,7 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EffMatrixSamples.cs" />
-    <Compile Include="Matrix\FtPlanBuilder.cs" />
+    <Compile Include="Matrix\FtPlanMatrixBuilder.cs" />
     <Compile Include="Matrix\FtPlanMatrix.cs" />
     <Compile Include="Matrix\FtPlanContext.cs" />
     <Compile Include="Model\ActionGroup.cs" />

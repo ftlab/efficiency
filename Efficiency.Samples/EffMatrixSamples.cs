@@ -14,7 +14,7 @@ namespace Efficiency.Samples
             var context = new FtPlanContext();
             //fluent api - код должен быть читабельный. Debug-люди не любят данный подход
             //Скрыта все реализация. Но абсрактная модель!!!
-            var matrix = new FtPlanBuilder()
+            var matrix = new FtPlanMatrixBuilder()
                  .UseSum() // Использовать сумму, в качестве функции эффективности
                  .AddIndicator(5, WasInSectorInLast) // Был в предыдем секторе
                  .Build(); 
