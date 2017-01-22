@@ -1,5 +1,6 @@
 ﻿using Efficiency.Samples.Matrix;
 using Efficiency.Samples.Model;
+using System;
 
 namespace Efficiency.Samples
 {
@@ -7,25 +8,24 @@ namespace Efficiency.Samples
     {
         public void Builder()
         {
-            //нашел доказетельство, при котором матрица решений является деревом решений
-            //все просто: вес узла должно быть больше суммы весов дочерних узлов
-            //матрица все же гибче
-            //инкапсуляция контекста для принятия решения (учитывает накопленный результат)
             var context = new FtPlanContext();
-            //fluent api - код должен быть читабельный (Debug-люди не любят данный подход)
-            //Скрыта все реализация. Но абсрактная модель!!!
             var matrix = new FtPlanMatrixBuilder()
-                 .UseSum() // Использовать сумму, в качестве функции эффективности
-                 //.UseAverage() //  А можно использовать любую накапливущую функцию
-                 .AddIndicator(5, HasTutor) // ЕСть наставник в накполенных результатаз
-                 .AddIndicator(5, WasInSectorInLast) // Был в предыдем сектореc
+                 .UseSum()
+                 .AddIndicator(5, HasTutor)
+                 .AddIndicator(5, WasInSectorInLast)
                  .Build();
 
-            //получение эффективного варианта
             var employee = matrix.GetEffectiveVar(context);
         }
 
-        public static double WasInSectorInLast(Employee e, FtPlanContext context) => 0;
+        public static double WasInSectorInLast(Employee e, FtPlanContext context)
+        {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            var last = context.GetLast(e);
+            if (last == null || context.Sector == null) return 1;
+
+            return last.SectorId == context.Sector.Id ? 0 : 1;
+        }
         public static double HasTutor(Employee e, FtPlanContext context) => 0;
     }
 }

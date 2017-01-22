@@ -205,6 +205,7 @@
     <Compile Include="Model\EmployeeKaskadUser.cs" />
     <Compile Include="Model\EmployeeOrganizationalStructure.cs" />
     <Compile Include="Model\EmployeeOverProcessing.cs" />
+    <Compile Include="Model\EmployeePlanStat.cs" />
     <Compile Include="Model\EmployeeSession.cs" />
     <Compile Include="Model\EmployeeWorkPermitSchedule.cs" />
     <Compile Include="Model\Employee_ReportGroup.cs" />
