@@ -21,12 +21,6 @@ namespace Efficiency.Matrix
         /// </summary>
         private List<Func<TVar, TContext, double>> _indicators;
 
-
-        /// <summary>
-        /// Веса нидикаторов
-        /// </summary>
-        private List<double> _weights;
-
         /// <summary>
         /// Коллекция вариантов
         /// </summary>
@@ -73,13 +67,11 @@ namespace Efficiency.Matrix
         /// </summary>
         /// <param name="func">фукнция индикатора</param>
         /// <returns>построитель</returns>
-        public EffMatrixBuilder<TVar, TContext> AddIndicator(double weight, Func<TVar, TContext, double> func)
+        public EffMatrixBuilder<TVar, TContext> AddIndicator(Func<TVar, TContext, double> func)
         {
             if (func == null) throw new ArgumentNullException(nameof(func));
             if (_indicators == null) _indicators = new List<Func<TVar, TContext, double>>();
             _indicators.Add(func);
-            if (_weights == null) _weights = new List<double>();
-            _weights.Add(weight);
             return this;
         }
 
@@ -99,7 +91,7 @@ namespace Efficiency.Matrix
         /// Построить матрицу эффективности
         /// </summary>
         /// <returns>матрица эффективности</returns>
-        public EffMatrix<TVar, TContext> Build()
+        public virtual EffMatrix<TVar, TContext> Build()
         {
             var func = new EffFunc<TVar, TContext>(_func);
             _indicators.ForEach(x => func.AddIndicator(new EffIndicator<TVar, TContext>(x)));
