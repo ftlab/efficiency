@@ -10,6 +10,7 @@ namespace Efficiency.Matrix
     /// <typeparam name="TVar">тип варианта</typeparam>
     /// <typeparam name="TContext">тип контекста</typeparam>
     public class EffMatrixBuilder<TVar, TContext>
+        where TContext : IEffMatrixContext<TVar>
     {
         /// <summary>
         /// Функция эффективности
@@ -20,11 +21,6 @@ namespace Efficiency.Matrix
         /// Список индикаторов эффективности
         /// </summary>
         private List<Func<TVar, TContext, double>> _indicators;
-
-        /// <summary>
-        /// Коллекция вариантов
-        /// </summary>
-        private IEnumerable<TVar> _variants;
 
         /// <summary>
         /// Использовать функцию
@@ -75,17 +71,6 @@ namespace Efficiency.Matrix
             return this;
         }
 
-        /// <summary>
-        /// Использовать варианты
-        /// </summary>
-        /// <param name="variants">варианты</param>
-        /// <returns>построитель</returns>
-        public EffMatrixBuilder<TVar, TContext> UseVariants(IEnumerable<TVar> variants)
-        {
-            if (variants == null) throw new ArgumentNullException(nameof(variants));
-            _variants = variants;
-            return this;
-        }
 
         /// <summary>
         /// Построить матрицу эффективности
@@ -95,7 +80,7 @@ namespace Efficiency.Matrix
         {
             var func = new EffFunc<TVar, TContext>(_func);
             _indicators.ForEach(x => func.AddIndicator(new EffIndicator<TVar, TContext>(x)));
-            var matrix = new EffMatrix<TVar, TContext>(func, _variants);
+            var matrix = new EffMatrix<TVar, TContext>(func);
             return matrix;
         }
     }

@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System;
 using System.Linq;
+using Efficiency.Matrix;
 
 namespace Efficiency.Samples.Matrix
 {
-    public class PlanContext
+    public class PlanMatrixContext : IEffMatrixContext<Employee>
     {
-        public readonly List<EmployeePlanStat> Stat = new List<EmployeePlanStat>();
+        public List<EmployeePlanStat> Stat = new List<EmployeePlanStat>();
 
-        public readonly List<Employee> Choosed = new List<Employee>();
+        public List<Employee> Choosed = new List<Employee>();
 
-        public readonly Dictionary<long, List<long>> Tutors = new Dictionary<long, List<long>>();
+        public Dictionary<long, List<long>> Tutors = new Dictionary<long, List<long>>();
 
-        public readonly List<KeyValuePair<long, long>> Uncompatibles = new List<KeyValuePair<long, long>>();
+        public List<KeyValuePair<long, long>> Uncompatibles = new List<KeyValuePair<long, long>>();
 
-        public readonly List<LinkedList<long>> JobChains = new List<LinkedList<long>>();
+        public List<LinkedList<long>> JobChains = new List<LinkedList<long>>();
+
+        public List<Employee> _resources = new List<Employee>();
 
         public long DepartmentId;
 
@@ -38,6 +41,11 @@ namespace Efficiency.Samples.Matrix
         {
             return Stat.Where(x => x.EmployeeId == e.Id)
                 .OrderByDescending(x => x.BeginDateTime);
+        }
+
+        public IEnumerable<Employee> Get()
+        {
+            return _resources;
         }
     }
 }

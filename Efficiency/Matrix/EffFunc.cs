@@ -10,6 +10,7 @@ namespace Efficiency.Matrix
     /// <typeparam name="TVar">тип варианта</typeparam>
     /// <typeparam name="TContext">тип контекста</typeparam>
     public class EffFunc<TVar, TContext>
+        where TContext: IEffMatrixContext<TVar>
     {
         /// <summary>
         /// Индикаторы эффективности

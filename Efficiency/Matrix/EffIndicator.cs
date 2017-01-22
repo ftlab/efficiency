@@ -8,6 +8,7 @@ namespace Efficiency.Matrix
     /// <typeparam name="TVar">тип варианта</typeparam>
     /// <typeparam name="TContext">тип контекста</typeparam>
     public class EffIndicator<TVar, TContext>
+        where TContext : IEffMatrixContext<TVar>
     {
         /// <summary>
         /// Функция индикатора

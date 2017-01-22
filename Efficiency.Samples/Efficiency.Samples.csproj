@@ -55,8 +55,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EffMatrixSamples.cs" />
+    <Compile Include="Matrix\PlanMatrixContextBuilder.cs" />
+    <Compile Include="Matrix\PlanDb.cs" />
     <Compile Include="Matrix\PlanMatrixBuilder.cs" />
-    <Compile Include="Matrix\PlanContext.cs" />
+    <Compile Include="Matrix\PlanMatrixContext.cs" />
     <Compile Include="Model\ActionGroup.cs" />
     <Compile Include="Model\ActionType.cs" />
     <Compile Include="Model\ActivityMode.cs" />

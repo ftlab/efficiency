@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Efficiency.Samples.Matrix
 {
-    public class PlanMatrixBuilder : EffMatrixBuilder<Employee, PlanContext>
+    public class PlanMatrixBuilder : EffMatrixBuilder<Employee, PlanMatrixContext>
     {
         public PlanMatrixBuilder UseWasInSectorInLast(double weight)
         {
@@ -31,9 +31,9 @@ namespace Efficiency.Samples.Matrix
             return this;
         }
 
-        public PlanMatrixBuilder UseInJobChain(double weight)
+        public PlanMatrixBuilder UseJobChain(double weight)
         {
-            AddIndicator((e, c) => weight * InJobChain(e, c));
+            AddIndicator((e, c) => weight * JobChain(e, c));
             return this;
         }
 
@@ -43,14 +43,14 @@ namespace Efficiency.Samples.Matrix
             return this;
         }
 
-        private static double WasInSectorInLast(Employee e, PlanContext context)
+        private static double WasInSectorInLast(Employee e, PlanMatrixContext context)
         {
             var last = context.GetLast(e);
             if (last == null || context.Sector == null) return 1;
             return last.SectorId == context.Sector.Id ? 0 : 1;
         }
 
-        private static double HasTutor(Employee e, PlanContext context)
+        private static double HasTutor(Employee e, PlanMatrixContext context)
         {
             return context.Tutors.Any(x =>
             context.Choosed.Any(y => y.Id == x.Key
@@ -58,7 +58,7 @@ namespace Efficiency.Samples.Matrix
             ? 1 : 0;
         }
 
-        private static double HasRestrictionBySex(Employee e, PlanContext context)
+        private static double HasRestrictionBySex(Employee e, PlanMatrixContext context)
         {
             if (e.UseDepartmentJobSexRestrictions == false) return 1;
             if (string.IsNullOrEmpty(context.DepartmentJob.RestrictedSex)) return 1;
@@ -66,7 +66,7 @@ namespace Efficiency.Samples.Matrix
                 ? 1 : 0;
         }
 
-        private static double HasUncompatible(Employee e, PlanContext context)
+        private static double HasUncompatible(Employee e, PlanMatrixContext context)
         {
             return context.Choosed.Any(x =>
             context.Uncompatibles.Any(y =>
@@ -75,7 +75,7 @@ namespace Efficiency.Samples.Matrix
             ? 0 : 1;
         }
 
-        private static double InJobChain(Employee e, PlanContext context)
+        private static double JobChain(Employee e, PlanMatrixContext context)
         {
             var chain = context.GetJobChain();
             if (chain == null)
@@ -92,7 +92,7 @@ namespace Efficiency.Samples.Matrix
             return 0;
         }
 
-        private static double Expierence(Employee e, PlanContext context)
+        private static double Expierence(Employee e, PlanMatrixContext context)
         {
             double? expierence = e.EmployeeDepartmentJob
                 .FirstOrDefault(x => x.DepartmentJobId == context.DepartmentJob.Id)
