@@ -126,7 +126,6 @@ namespace Efficiency.Samples.Matrix
             }
         }
 
-
         public EmployeePlanStat GetLast(Employee e)
         {
             return GetStat(e)
@@ -138,11 +137,74 @@ namespace Efficiency.Samples.Matrix
             return JobChains.FirstOrDefault(x => x.Contains(CurrentJob.Id));
         }
 
-        internal IEnumerable<EmployeePlanStat> GetStat(Employee e)
+        public IEnumerable<EmployeePlanStat> GetStat(Employee e)
         {
             return Stat.Where(x => x.EmployeeId == e.Id)
                 .OrderByDescending(x => x.BeginDateTime);
         }
 
+        public List<Employee> GetResources()
+        {
+            var departmentId = Header.DepartmentId;
+            var fromDate = Header.BeginDateTime;
+            var toDate = Header.EndDateTime;
+
+            var query = from employee in Db.Employee
+                                .Include(x => x.EmployeeDepartmentGroup)
+                                .Include(x => x.EmployeeDepartmentJob)
+                                .Include(x => x.MilitaryRank)
+                                .Include(x => x.EmployeeWorkPermitSchedule)
+                                .Include(x => x.EmployeeWorkPermitSchedule.Select(z => z.WorkPermitType))
+                                .Include(x => x.EmployeeOverProcessing)
+                                .Include(x => x.EmployeeOrganizationalStructure)
+                                .Where(x =>
+                                    !(x.IsSystem ?? false)
+                                    && !(x.IsDeleted ?? false))
+                        select employee;
+
+            query = query.Where(x => x.EmployeeOrganizationalStructure.Any(y => y.DepartmentId == departmentId));
+
+            DateTime date = fromDate.Date;
+            var employees = new List<Employee>(128);
+            foreach (Employee employee in query)
+            {
+                if (employee.IsWorkLimitationApplyed == true
+                    && employee.PermissibleWorkTimeFrom != null && employee.PermissibleWorkTimeTo != null)
+                {
+                    DateTime fromEmployee = date.Add(employee.PermissibleWorkTimeFrom.Value);
+                    DateTime toEmployee = date.Add(employee.PermissibleWorkTimeTo.Value);
+                    if (toEmployee < fromEmployee)
+                        toEmployee = toEmployee.AddDays(1);
+
+                    if (toEmployee <= fromDate || fromEmployee >= toDate)
+                        continue;
+                }
+                employees.Add(employee);
+            }
+
+            //оставшие ресурсы
+            List<Employee> rest = new List<Employee>();
+            //анализируем все допустимые ресурсы (работники отделения и нет ограничения на работу в определенные часы)
+            foreach (var employee in employees)
+            {
+                //если есть причина отсутствия
+                if (employee.EmployeeWorkPermitSchedule
+                    .Any(x => x.BeginDateTime < Header.EndDateTime && x.EndDateTime > Header.BeginDateTime))
+                {
+                    // Удаляем все детали с этим рерурсом
+                    Header.BorderProtectionScheduleDetail.Where(x => x.EmployeeId == employee.Id)
+                        .ToList()
+                        .ForEach(x => Header.BorderProtectionScheduleDetail.Remove(x));
+                }
+                else
+                {
+                    //Если ресурс не участвует еще в плане, то добавляем
+                    if (Header.BorderProtectionScheduleDetail.Any(x => x.EmployeeId == employee.Id) == false)
+                        rest.Add(employee);
+                }
+            }
+
+            return employees;
+        }
     }
 }
