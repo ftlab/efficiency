@@ -46,8 +46,8 @@ namespace Efficiency.Samples.Matrix
         private static double WasInSectorInLast(Employee e, PlanMatrixContext context)
         {
             var last = context.GetLast(e);
-            if (last == null || context.Sector == null) return 1;
-            return last.SectorId == context.Sector.Id ? 0 : 1;
+            if (last == null || context.CurrentSector == null) return 1;
+            return last.SectorId == context.CurrentSector.Id ? 0 : 1;
         }
 
         private static double HasTutor(Employee e, PlanMatrixContext context)
@@ -61,8 +61,8 @@ namespace Efficiency.Samples.Matrix
         private static double HasRestrictionBySex(Employee e, PlanMatrixContext context)
         {
             if (e.UseDepartmentJobSexRestrictions == false) return 1;
-            if (string.IsNullOrEmpty(context.DepartmentJob.RestrictedSex)) return 1;
-            return context.DepartmentJob.RestrictedSex == e.Sex
+            if (string.IsNullOrEmpty(context.CurrentJob.RestrictedSex)) return 1;
+            return context.CurrentJob.RestrictedSex == e.Sex
                 ? 1 : 0;
         }
 
@@ -77,7 +77,7 @@ namespace Efficiency.Samples.Matrix
 
         private static double JobChain(Employee e, PlanMatrixContext context)
         {
-            var chain = context.GetJobChain();
+            var chain = context.GetCurrentChain();
             if (chain == null)
                 return 1;
 
@@ -85,7 +85,7 @@ namespace Efficiency.Samples.Matrix
             if (stat == null)
                 return 1;
 
-            var chainNode = chain.Find(context.DepartmentJob.Id);
+            var chainNode = chain.Find(context.CurrentJob.Id);
             if (chainNode == null) throw new NullReferenceException(nameof(chainNode));
             if (chainNode.Previous != null && chainNode.Previous.Value == stat.DepartmentJobId)
                 return 1;
@@ -95,7 +95,7 @@ namespace Efficiency.Samples.Matrix
         private static double Expierence(Employee e, PlanMatrixContext context)
         {
             double? expierence = e.EmployeeDepartmentJob
-                .FirstOrDefault(x => x.DepartmentJobId == context.DepartmentJob.Id)
+                .FirstOrDefault(x => x.DepartmentJobId == context.CurrentJob.Id)
                 ?.Experience ?? e.Experience;
 
             if (expierence == null)

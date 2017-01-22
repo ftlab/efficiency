@@ -12,17 +12,11 @@ namespace Efficiency.Samples
             var db = new PlanDb();
 
             long deparmentId = 1;
-            DepartmentJob departmentJob = new DepartmentJob();
+            DepartmentJob departmentJob = null;
+            Sector sector = null;
 
             var choosed = new List<Employee>();
-            var variants = new List<Employee>();
-
-            var context = new PlanMatrixContextBuilder(db)
-                .SetDepartment(deparmentId)
-                .SetDepartmentJob(departmentJob)
-                .SetChoosed(choosed)
-                .LoadStat()
-                .Build();
+            List<Employee> resources;
 
             var matrix = new PlanMatrixBuilder()
                  .UseWasInSectorInLast(16)
@@ -33,7 +27,7 @@ namespace Efficiency.Samples
                  .UseSum()
                  .Build();
 
-            var employee = matrix.GetEffectiveVar(context);
+            var employee = matrix.GetEffectiveVar(null, new PlanMatrixContext(db, 1));
         }
     }
 }

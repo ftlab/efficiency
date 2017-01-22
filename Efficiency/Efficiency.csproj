@@ -51,7 +51,6 @@
     <Compile Include="Matrix\EffIndicator.cs" />
     <Compile Include="Matrix\EffMatrix.cs" />
     <Compile Include="Matrix\EffMatrixBuilder.cs" />
-    <Compile Include="Matrix\IEffMatrixContext.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -10,7 +10,6 @@ namespace Efficiency.Matrix
     /// <typeparam name="TVar">тип варианта</typeparam>
     /// <typeparam name="TContext">тип контекста</typeparam>
     public class EffMatrix<TVar, TContext>
-        where TContext : IEffMatrixContext<TVar>
     {
         /// <summary>
         /// Функция эффективности
@@ -28,17 +27,23 @@ namespace Efficiency.Matrix
         }
 
         /// <summary>
+        /// Вычислить эффективность
+        /// </summary>
+        /// <param name="variant">вариант</param>
+        /// <param name="context">контекст</param>
+        /// <returns>значение эффективности</returns>
+        public double CallEffective(TVar variant, TContext context) => _func.Calc(variant, context);
+
+        /// <summary>
         /// Получить эффективный вариант
         /// </summary>
+        /// /// <param name="variants">Варианты</param>
         /// <param name="context">контекст</param>
         /// <returns>вариант</returns>
-        public TVar GetEffectiveVar(TContext context)
+        public TVar GetEffectiveVar(IEnumerable<TVar> variants, TContext context)
         {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-
-            return context
-                .Get()
-                .OrderByDescending(x => _func.Calc(x, context))
+            return variants
+                .OrderByDescending(x => CallEffective(x, context))
                 .FirstOrDefault();
         }
     }

@@ -13,12 +13,20 @@ namespace Efficiency.Samples.Model
 
         public long EmployeeId { get; set; }
 
-        public int CompatibilityTypeId { get; set; }
+        public EmployeeCompatibilityType CompatibilityTypeId { get; set; }
 
         public long ToEmployeeId { get; set; }
 
         public virtual Employee Employee { get; set; }
 
         public virtual Employee Employee1 { get; set; }
+    }
+
+    public enum EmployeeCompatibilityType
+    {
+        [Display(Name = "Несовместимость")]
+        Incompatibility = 0,
+        [Display(Name = "Наставничество")]
+        Tutorship = 1
     }
 }
